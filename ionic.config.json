@@ -1,0 +1,7 @@
+{
+  "name": "what-to-eat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
