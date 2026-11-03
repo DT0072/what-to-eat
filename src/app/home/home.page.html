@@ -1,20 +1,374 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header class="ion-no-border">
+  <div class="sunway-top-strip">
+    <div class="strip-content">
+      <span class="uni-tag">SUNWAY UNIVERSITY</span>
+      <span class="faculty-tag">Faculty of Engineering &amp; Technology (SET)</span>
+    </div>
+  </div>
+
+  <ion-toolbar class="main-toolbar">
     <ion-title>
-      Blank
+      <div class="brand-container">
+        <!-- Official Sunway University Logo -->
+        <div class="logo-box">
+          <img src="assets/icon/sunway-logo.png" alt="Sunway University Logo" class="sunway-header-logo" />
+        </div>
+        <div class="brand-text">
+          <h1>WhatToEat!!!</h1>
+        </div>
+      </div>
     </ion-title>
+
+    <ion-buttons slot="end">
+      <!-- Admin status indicator & button -->
+      <ion-button *ngIf="!isAdmin" fill="outline" color="light" size="small" (click)="openAdminLogin()">
+        <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+        Staff / Admin Mode
+      </ion-button>
+
+      <ion-button *ngIf="isAdmin" fill="solid" color="warning" size="small" (click)="logoutAdmin()">
+        <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
+        Admin Active (Logout)
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Segment for Quick Navigation -->
+  <ion-toolbar class="sub-toolbar">
+    <ion-segment [(ngModel)]="currentTab" (ionChange)="onTabChange($event)">
+      <ion-segment-button value="wheel">
+        <ion-icon name="sync-outline"></ion-icon>
+        <ion-label>Spin Wheel</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="directory">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <ion-label>Eateries ({{ restaurants.length }})</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="add">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <ion-label>Add Restaurant</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="page-content">
+  <!-- TAB 1: SPIN WHEEL DECIDER -->
+  <div *ngIf="currentTab === 'wheel'" class="tab-view-container">
+    <div class="hero-announcement">
+      <div class="hero-left">
+        <h2>Can't decide what to eat for lunch? 🍱</h2>
+        <p>
+          Spin the wheel to decide where to go for lunch today!
+        </p>
+      </div>
+      <div class="hero-right">
+        <div class="active-pool-pill">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          <span><strong>{{ activeRestaurants.length }}</strong> options in pool</span>
+        </div>
+      </div>
+    </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <!-- Spin Wheel Section -->
+    <div class="wheel-main-section">
+      <div class="wheel-wrapper">
+        <!-- Precision Pointer Pin -->
+        <div class="wheel-pointer">
+          <div class="pointer-arrow"></div>
+          <div class="pointer-dot"></div>
+        </div>
+
+        <!-- Canvas Spinwheel -->
+        <canvas #wheelCanvas id="wheelCanvas" width="480" height="480" class="canvas-wheel"></canvas>
+
+        <!-- Center Hub -->
+        <button class="center-spin-hub" (click)="spinWheel()" [disabled]="isSpinning || activeRestaurants.length < 2" [title]="'Click to Spin Wheel'">
+          <div class="hub-label" *ngIf="!isSpinning">
+            <span class="hub-icon">⚡</span>
+            <span class="hub-text">SPIN!</span>
+          </div>
+          <div class="hub-spinning" *ngIf="isSpinning">
+            <ion-spinner name="crescent" color="warning"></ion-spinner>
+          </div>
+        </button>
+      </div>
+
+      <!-- Controls & Quick Filters -->
+      <div class="wheel-sidebar">
+        <!-- Result Announcement Card -->
+        <div *ngIf="selectedWinner" class="winner-card ion-padding">
+          <div class="winner-badge">
+            <ion-icon name="trophy"></ion-icon> TODAY'S LUNCH DESTINATION
+          </div>
+          <h3 class="winner-name">{{ selectedWinner.name }}</h3>
+          <div class="winner-meta">
+            <span [class]="getHalalBadgeClass(selectedWinner.halalStatus)">{{ selectedWinner.halalStatus }}</span>
+            <span class="meta-tag price"><ion-icon name="cash-outline"></ion-icon> {{ selectedWinner.approxPriceMYR || selectedWinner.priceRange }}</span>
+            <span class="meta-tag walk"><ion-icon name="walk-outline"></ion-icon> {{ selectedWinner.walkingTimeMin }} mins walk</span>
+          </div>
+          <div class="winner-detail" *ngIf="selectedWinner.recommendedDish">
+            <strong>Recommended:</strong> {{ selectedWinner.recommendedDish }}
+          </div>
+          <div class="winner-detail" *ngIf="selectedWinner.exactAddress">
+            <strong>Exact Address:</strong> {{ selectedWinner.exactAddress }}
+          </div>
+          <div class="winner-detail">
+            <strong>Directions:</strong> {{ selectedWinner.locationNote }}
+          </div>
+          <div class="winner-actions">
+            <ion-button expand="block" color="primary" (click)="openGoogleMaps(selectedWinner)">
+              <ion-icon slot="start" name="navigate-outline"></ion-icon>
+              Open in Google Maps / Directions
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- Spin Action Button -->
+        <div class="action-box">
+          <ion-button expand="block" size="large" color="tertiary" (click)="spinWheel()" [disabled]="isSpinning || activeRestaurants.length < 2" class="big-spin-btn">
+            <ion-icon slot="start" name="dice-outline"></ion-icon>
+            {{ isSpinning ? 'SPINNING...' : 'SPIN FOR LUNCH NOW!' }}
+          </ion-button>
+        </div>
+
+        <!-- Active Restaurants in Pool Checklist -->
+        <div class="pool-checklist-card">
+          <div class="pool-header">
+            <h4>Quick Pool Selection ({{ activeRestaurants.length }} enabled)</h4>
+            <span class="hint">Uncheck places you don't feel like eating today</span>
+          </div>
+          <div class="pool-list-scroll">
+            <div *ngFor="let item of restaurants; let i = index" class="pool-item" [class.item-inactive]="!item.active">
+              <ion-checkbox [(ngModel)]="item.active" (ionChange)="onToggleRestaurant(item)" labelPlacement="end">
+                <div class="checkbox-label">
+                  <span class="color-dot" [style.background]="getSegmentColor(i)"></span>
+                  <span class="name">{{ item.name }}</span>
+                </div>
+              </ion-checkbox>
+              <div class="item-meta-right">
+                <span class="price-small">{{ item.approxPriceMYR || item.priceRange }}</span>
+                <span class="walk-min">{{ item.walkingTimeMin }}m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: DIRECTORY -->
+  <div *ngIf="currentTab === 'directory'" class="tab-view-container directory-container">
+    <div class="directory-header">
+      <div>
+        <h2>Sunway Area Eateries &amp; Restaurants ({{ filteredRestaurants.length }})</h2>
+        <p>Curated spots around Sunway SET, Rock Cafe, Canopy Walk, Sunway Geo, Nadayu 28 &amp; Sunway Pyramid.</p>
+      </div>
+
+      <div class="header-tools">
+        <ion-button fill="outline" color="secondary" (click)="downloadTsFile()" title="Download current database as .ts file for source code">
+          <ion-icon slot="start" name="download-outline"></ion-icon>
+          Export as .ts File
+        </ion-button>
+
+        <ion-button fill="solid" color="primary" (click)="currentTab = 'add'">
+          <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+          Register New Restaurant
+        </ion-button>
+
+        <ion-button *ngIf="isAdmin" fill="outline" color="danger" (click)="confirmResetDefault()">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          Reset To Default
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Admin Banner -->
+    <div class="admin-notice" *ngIf="isAdmin">
+      <ion-icon name="shield-outline"></ion-icon>
+      <div>
+        <strong>Admin Privileges Enabled:</strong> You have permission to delete entries.
+      </div>
+    </div>
+
+    <div class="user-notice" *ngIf="!isAdmin">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <div>
+        <strong>Notice:</strong> Anyone can register new restaurants. Only Admins can delete entries.
+      </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="search-filter-bar">
+      <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="applyFilter()" placeholder="Search restaurant, dish, street, or area..." [debounce]="150"></ion-searchbar>
+      <div class="filter-chips">
+        <ion-chip [outline]="selectedHalalFilter !== 'ALL'" (click)="setHalalFilter('ALL')">All Diets</ion-chip>
+        <ion-chip [outline]="selectedHalalFilter !== 'Halal Certified'" (click)="setHalalFilter('Halal Certified')">Halal Certified</ion-chip>
+        <ion-chip [outline]="selectedHalalFilter !== 'Pork-Free / Muslim-Friendly'" (click)="setHalalFilter('Pork-Free / Muslim-Friendly')">Pork-Free</ion-chip>
+        <ion-chip [outline]="selectedHalalFilter !== 'Non-Halal'" (click)="setHalalFilter('Non-Halal')">Non-Halal</ion-chip>
+      </div>
+    </div>
+
+    <!-- Restaurant Grid -->
+    <div class="restaurant-grid">
+      <div *ngFor="let item of filteredRestaurants" class="restaurant-card">
+        <div class="card-top">
+          <div class="category-pill">{{ item.category }}</div>
+          <div class="price-pill-tag">
+            <strong>{{ item.approxPriceMYR || item.priceRange }}</strong>
+            <span class="price-tier">({{ item.priceRange }})</span>
+          </div>
+        </div>
+        <h3 class="card-title">{{ item.name }}</h3>
+
+        <div class="card-badges">
+          <span [class]="getHalalBadgeClass(item.halalStatus)">{{ item.halalStatus }}</span>
+          <span class="walk-badge"><ion-icon name="walk-outline"></ion-icon> {{ item.walkingTimeMin }} mins walk</span>
+        </div>
+
+        <p class="dish-highlight" *ngIf="item.recommendedDish">
+          <ion-icon name="sparkles-outline"></ion-icon>
+          <span><strong>Dish:</strong> {{ item.recommendedDish }}</span>
+        </p>
+
+        <p class="exact-address" *ngIf="item.exactAddress">
+          <ion-icon name="business-outline"></ion-icon>
+          <span>{{ item.exactAddress }}</span>
+        </p>
+
+        <p class="location-text">
+          <ion-icon name="trail-sign-outline"></ion-icon>
+          <span>{{ item.locationNote }}</span>
+        </p>
+
+        <div class="card-footer">
+          <span class="added-by">Added by: {{ item.addedBy }}</span>
+
+          <div class="footer-actions">
+            <!-- Delete Button: Only enabled for Admin -->
+            <ion-button *ngIf="isAdmin" fill="clear" color="danger" size="small" (click)="deleteRestaurant(item)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+
+            <!-- Locked indicator for non-admin -->
+            <span *ngIf="!isAdmin" class="admin-locked-pill" title="Only Admin can delete">
+              <ion-icon name="lock-closed-outline"></ion-icon> Protected
+            </span>
+
+            <ion-button fill="solid" color="primary" size="small" (click)="openGoogleMaps(item)" title="Open in Google Maps">
+              <ion-icon slot="start" name="navigate-outline"></ion-icon>
+              Maps
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: REGISTER NEW RESTAURANT -->
+  <div *ngIf="currentTab === 'add'" class="tab-view-container add-container">
+    <div class="form-card">
+      <div class="form-header">
+        <div class="form-icon"><ion-icon name="add-circle"></ion-icon></div>
+        <div>
+          <h2>Register New Lunch Option</h2>
+          <p>Add your favorite lunch spot around Sunway to the WhatToEat database.</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="submitNewRestaurant()">
+        <ion-item class="form-item">
+          <ion-label position="stacked">Restaurant / Stall Name *</ion-label>
+          <ion-input [(ngModel)]="newForm.name" name="name" placeholder="e.g. Garlic Fried Rice @ Rock Cafe" required></ion-input>
+        </ion-item>
+
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item class="form-item">
+              <ion-label position="stacked">Category *</ion-label>
+              <ion-select [(ngModel)]="newForm.category" name="category" interface="popover">
+                <ion-select-option value="Campus Cafeteria">Campus Cafeteria</ion-select-option>
+                <ion-select-option value="Canopy Walk / Sunway Geo">Canopy Walk / Sunway Geo</ion-select-option>
+                <ion-select-option value="Rock Cafe / SS15">Rock Cafe / SS15</ion-select-option>
+                <ion-select-option value="Nadayu 28 / Campus Gate">Nadayu 28 / Campus Gate</ion-select-option>
+                <ion-select-option value="Sunway Pyramid Mall">Sunway Pyramid Mall</ion-select-option>
+                <ion-select-option value="Budget Friendly">Budget Friendly</ion-select-option>
+                <ion-select-option value="Fast Food / Cafe">Fast Food / Cafe</ion-select-option>
+                <ion-select-option value="Other">Other</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <ion-item class="form-item">
+              <ion-label position="stacked">Price Range Tier *</ion-label>
+              <ion-select [(ngModel)]="newForm.priceRange" name="priceRange" interface="popover">
+                <ion-select-option value="$">$ Budget (&lt; RM 12)</ion-select-option>
+                <ion-select-option value="$$">$$ Moderate (RM 12 - RM 25)</ion-select-option>
+                <ion-select-option value="$$$">$$$ Premium (&gt; RM 25)</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item class="form-item">
+              <ion-label position="stacked">Approx Price Range (MYR)</ion-label>
+              <ion-input [(ngModel)]="newForm.approxPriceMYR" name="approxPriceMYR" placeholder="e.g. RM 8 - RM 14"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <ion-item class="form-item">
+              <ion-label position="stacked">Dietary / Halal Status *</ion-label>
+              <ion-select [(ngModel)]="newForm.halalStatus" name="halalStatus" interface="popover">
+                <ion-select-option value="Halal Certified">Halal Certified</ion-select-option>
+                <ion-select-option value="Pork-Free / Muslim-Friendly">Pork-Free / Muslim-Friendly</ion-select-option>
+                <ion-select-option value="Non-Halal">Non-Halal</ion-select-option>
+                <ion-select-option value="Vegetarian">Vegetarian</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Estimated Walking Time from SET Building (Minutes) *</ion-label>
+          <ion-input type="number" [(ngModel)]="newForm.walkingTimeMin" name="walkingTimeMin" min="1" max="60" required></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Exact Address / Shoplot / Floor *</ion-label>
+          <ion-input [(ngModel)]="newForm.exactAddress" name="exactAddress" placeholder="e.g. Lot 12, Ground Floor, Jalan PJS 11/20, Bandar Sunway" required></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Directions &amp; Location Guide *</ion-label>
+          <ion-input [(ngModel)]="newForm.locationNote" name="locationNote" placeholder="e.g. Next to escalator beside Canopy Walk exit" required></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Google Maps Search / Landmark Query</ion-label>
+          <ion-input [(ngModel)]="newForm.googleMapsPlaceQuery" name="googleMapsPlaceQuery" placeholder="e.g. Rock Cafe Bandar Sunway"></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Recommended Dish / Must Try</ion-label>
+          <ion-input [(ngModel)]="newForm.recommendedDish" name="recommendedDish" placeholder="e.g. Salted Egg Chicken Rice + Iced Teh O Limau"></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-label position="stacked">Your Name / Department *</ion-label>
+          <ion-input [(ngModel)]="newForm.addedBy" name="addedBy" placeholder="e.g. Engineering Year 2 Student / CS Dept" required></ion-input>
+        </ion-item>
+
+        <div class="form-actions ion-margin-top">
+          <ion-button type="submit" expand="block" color="primary" [disabled]="!isFormValid()">
+            <ion-icon slot="start" name="cloud-upload-outline"></ion-icon>
+            Save &amp; Add to Spin Wheel
+          </ion-button>
+        </div>
+      </form>
+    </div>
   </div>
 </ion-content>

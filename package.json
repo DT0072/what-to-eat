@@ -26,6 +26,7 @@
     "@capacitor/keyboard": "8.0.6",
     "@capacitor/status-bar": "8.0.4",
     "@ionic/angular": "^9.0.0",
+    "canvas-confetti": "^1.9.4",
     "ionicons": "^8.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -37,6 +38,7 @@
     "@angular/language-service": "22.2.3",
     "@capacitor/cli": "8.6.0",
     "@ionic/angular-toolkit": "^13.0.0",
+    "@types/canvas-confetti": "^1.9.0",
     "angular-eslint": "22.6.0",
     "eslint": "^10.10.0",
     "jsdom": "^30.1.0",

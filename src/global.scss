@@ -1,37 +1,67 @@
 /*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * App Global CSS - Sunway SET Theme
  */
 
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+/* Clean University Academic Font and Base */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* Custom badges */
+.badge-halal {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.badge-muslim-friendly {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.badge-non-halal {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.badge-veg {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+/* Modal styling for clean academic look */
+ion-modal {
+  --border-radius: 14px;
+}
