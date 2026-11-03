@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Restaurant, INITIAL_SET_RESTAURANTS } from '../models/restaurant.model';
+import { Restaurant, INITIAL_FET_RESTAURANTS } from '../models/restaurant.model';
 
 // Local storage key for persistent user additions
-const STORAGE_KEY = 'sunway_set_what_to_eat_restaurants_v2';
+const STORAGE_KEY = 'sunway_fet_what_to_eat_restaurants_v3';
 // Session storage key to keep track of logged in admin
-const ADMIN_KEY = 'sunway_set_admin_session';
-// Default passcode for SET staff/admin to delete entries
-const ADMIN_PASSCODE = 'setadmin123';
+const ADMIN_KEY = 'sunway_fet_admin_session';
+
+// Admin credentials: Username and Password
+const ADMIN_USERNAME = 'admin';
+const ADMIN_PASSWORD = 'fetadmin12345';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,7 @@ export class RestaurantService {
     this.checkAdminSession();
   }
 
-  // Load saved restaurants from browser localStorage, or fall back to INITIAL_SET_RESTAURANTS in restaurant.model.ts
+  // Load saved restaurants from browser localStorage, or fall back to INITIAL_FET_RESTAURANTS in restaurant.model.ts
   private initDatabase(): void {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -38,7 +40,7 @@ export class RestaurantService {
       }
     }
     // First time load: save default list from restaurant.model.ts
-    this.saveToStorage(INITIAL_SET_RESTAURANTS);
+    this.saveToStorage(INITIAL_FET_RESTAURANTS);
   }
 
   // Check if admin is already signed in for this browser tab session
@@ -69,9 +71,12 @@ export class RestaurantService {
     return this.isAdmin$.getValue();
   }
 
-  // Verify staff passcode
-  verifyAdmin(passcode: string): boolean {
-    if (passcode.trim() === ADMIN_PASSCODE) {
+  // Verify staff admin username and password
+  verifyAdmin(username: string, password: string): boolean {
+    if (
+      username.trim().toLowerCase() === ADMIN_USERNAME.toLowerCase() &&
+      password.trim() === ADMIN_PASSWORD
+    ) {
       this.isAdmin$.next(true);
       sessionStorage.setItem(ADMIN_KEY, 'true');
       return true;
@@ -102,7 +107,7 @@ export class RestaurantService {
   // Export current full list as TypeScript code ready to copy-paste into restaurant.model.ts
   exportRestaurantsAsTsCode(): string {
     const current = this.getCurrentRestaurants();
-    return `export const INITIAL_SET_RESTAURANTS: Restaurant[] = ${JSON.stringify(current, null, 2)};`;
+    return `export const INITIAL_FET_RESTAURANTS: Restaurant[] = ${JSON.stringify(current, null, 2)};`;
   }
 
   // Download restaurants as a .ts file for developers to commit directly into source code
@@ -145,7 +150,7 @@ export class RestaurantService {
     if (!this.isAdmin()) {
       throw new Error('Unauthorized: Only Admin can reset directory data.');
     }
-    this.saveToStorage(INITIAL_SET_RESTAURANTS);
+    this.saveToStorage(INITIAL_FET_RESTAURANTS);
   }
 
   // Save list to localStorage and push update to subscribers

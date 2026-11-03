@@ -3,7 +3,7 @@
 > **Live Deployment:** [https://sunway-whattoeat.vercel.app](https://sunway-whattoeat.vercel.app)  
 > **Alternate Domain:** [https://whattoeat-ten-gamma.vercel.app](https://whattoeat-ten-gamma.vercel.app)
 
-A lunch decision engine and campus eateries directory designed for students, researchers, and faculty members at **Sunway University** (Faculty of Engineering & Technology).
+A lunch decision engine and campus eateries directory designed for students, researchers, and faculty members at **Sunway University** (Faculty of Engineering & Technology - FET).
 
 ---
 
@@ -14,13 +14,13 @@ A lunch decision engine and campus eateries directory designed for students, res
    - Smooth easing animation with confetti celebration.
    - Quick checkbox toggling to filter out eateries you visited yesterday.
 
-2. **Sunway University & SET Theme**
+2. **Sunway University & FET Theme**
    - Styled with Sunway University's official brand palette: Sunway Navy (`#002B49`), Gold (`#F5A623`), and Faculty of Engineering & Technology cyan/teal (`#005F73` / `#0A9396`).
    - High-contrast official Sunway University crest and header logo.
 
 3. **Community Submission & Protected Administration**
    - **Open Registration**: Any user can submit and register new lunch spots with exact addresses, estimated walking minutes, dietary status, and recommended dishes.
-   - **Admin-Only Deletions**: Deleting entries requires staff authentication (`setadmin123`) to prevent accidental data loss.
+   - **Admin-Only Deletions**: Deleting entries requires staff authentication with username and password to prevent accidental data loss.
 
 4. **Exact Location & Pricing Details**
    - Precise street addresses, shoplot lot numbers, and walking times.
@@ -29,7 +29,7 @@ A lunch decision engine and campus eateries directory designed for students, res
 
 5. **Codebase Syncing (.ts File Export)**
    - New user-submitted restaurants are immediately saved in browser storage.
-   - Includes a one-click **"Export as .ts File"** feature that generates updated `INITIAL_SET_RESTAURANTS` TypeScript code ready to commit into `restaurant.model.ts`.
+   - Includes a one-click **"Export as .ts File"** feature that generates updated `INITIAL_FET_RESTAURANTS` TypeScript code ready to commit into `restaurant.model.ts`.
 
 ---
 

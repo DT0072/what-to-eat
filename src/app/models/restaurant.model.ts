@@ -4,7 +4,7 @@ export interface Restaurant {
   category: 'Campus Cafeteria' | 'Canopy Walk / Sunway Geo' | 'Rock Cafe / SS15' | 'Nadayu 28 / Campus Gate' | 'Sunway Pyramid Mall' | 'Budget Friendly' | 'Fast Food / Cafe' | 'Other';
   priceRange: '$' | '$$' | '$$$';
   approxPriceMYR: string; // e.g. "RM 8 - RM 14"
-  walkingTimeMin: number; // minutes from Sunway SET building
+  walkingTimeMin: number; // minutes from Sunway FET building
   halalStatus: 'Halal Certified' | 'Pork-Free / Muslim-Friendly' | 'Non-Halal' | 'Vegetarian';
   exactAddress: string;   // exact street / floor / lot details
   locationNote: string;
@@ -16,7 +16,7 @@ export interface Restaurant {
   active: boolean; // included in the spin wheel or toggled off
 }
 
-export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
+export const INITIAL_FET_RESTAURANTS: Restaurant[] = [
   {
     id: 'res-1',
     name: 'Sunway College Cafeteria (University Building)',
@@ -26,11 +26,11 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     walkingTimeMin: 2,
     halalStatus: 'Halal Certified',
     exactAddress: 'Level 1, North Building, Sunway College, Jalan Universiti, Bandar Sunway',
-    locationNote: 'Level 1 directly below SET Lecture Theatres (Campus Central)',
+    locationNote: 'Level 1 directly below FET Lecture Theatres (Campus Central)',
     recommendedDish: 'Economy Rice (3 Dishes) / Halal Roast Chicken Rice',
     googleMapsPlaceQuery: 'Sunway College Cafeteria Bandar Sunway',
     googleMapsCoordinates: { lat: 3.0674, lng: 101.6038 },
-    addedBy: 'SET Dean Office',
+    addedBy: 'FET Dean Office',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -47,7 +47,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Ayam Bakar (Grilled Chicken with Sambal Terasi & Tahu/Tempeh)',
     googleMapsPlaceQuery: 'Rock Cafe Jalan PJS 11/20 Bandar Sunway',
     googleMapsCoordinates: { lat: 3.0697, lng: 101.6033 },
-    addedBy: 'SET Student Council',
+    addedBy: 'FET Student Council',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -64,7 +64,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Kam Heong Pork Fried Rice / Salted Fish Pork Belly Rice',
     googleMapsPlaceQuery: 'Rock Cafe Bandar Sunway',
     googleMapsCoordinates: { lat: 3.0697, lng: 101.6033 },
-    addedBy: 'Engineering Alumni',
+    addedBy: 'FET Alumni',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -98,7 +98,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Tom Yam Cream Seafood Pasta / Nasi Lemak Pandan Crispy Chicken',
     googleMapsPlaceQuery: 'Giraffe Cafe Sunway Geo Avenue',
     googleMapsCoordinates: { lat: 3.0639, lng: 101.6085 },
-    addedBy: 'Robotics Club',
+    addedBy: 'FET Robotics Club',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -115,7 +115,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Maggi Goreng Mamak + Telur Mata / Roti Canai Banjir',
     googleMapsPlaceQuery: 'Restoran Anwar Maju Nadayu 28 Bandar Sunway',
     googleMapsCoordinates: { lat: 3.0689, lng: 101.6015 },
-    addedBy: 'SET Dean Office',
+    addedBy: 'FET Dean Office',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -132,7 +132,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Beautiful Mess 5.0 / The Hangover Burger (Charcoal Buns)',
     googleMapsPlaceQuery: 'myBurgerLab Sunway Jalan PJS 11/9',
     googleMapsCoordinates: { lat: 3.0692, lng: 101.6022 },
-    addedBy: 'SET Cyber Security Team',
+    addedBy: 'FET Cyber Security Team',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -149,7 +149,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Tom Yam Oden Bowl + Sofuto Matcha / Chahan Rice Bowl',
     googleMapsPlaceQuery: 'FamilyMart Sunway Canopy Walkway',
     googleMapsCoordinates: { lat: 3.0662, lng: 101.6031 },
-    addedBy: 'Engineering Society',
+    addedBy: 'FET Engineering Society',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -166,7 +166,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Ayam Goreng Berempah Crispy + Kuah Kari Banjir + Bendi',
     googleMapsPlaceQuery: 'Nasi Kandar Pelita Bandar Sunway',
     googleMapsCoordinates: { lat: 3.0722, lng: 101.6082 },
-    addedBy: 'SET Robotics Lab',
+    addedBy: 'FET Robotics Lab',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -183,7 +183,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Roasted Chicken Breast Sub on Hearty Italian + Cookie Set',
     googleMapsPlaceQuery: 'Subway Sunway University Bandar Sunway',
     googleMapsCoordinates: { lat: 3.0678, lng: 101.6035 },
-    addedBy: 'SET Dean Office',
+    addedBy: 'FET Dean Office',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -200,7 +200,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Fresh Jumbo Prawn Wonton Soup Noodles + Butter Polo Bun',
     googleMapsPlaceQuery: 'Nanyang Cafe Sunway Pyramid',
     googleMapsCoordinates: { lat: 3.0733, lng: 101.6074 },
-    addedBy: 'Engineering Alumni',
+    addedBy: 'FET Alumni',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -217,7 +217,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Signature Asam Laksa + Herbal Chicken Soup Pan Mee',
     googleMapsPlaceQuery: 'Ah Cheng Laksa Sunway Pyramid LG2',
     googleMapsCoordinates: { lat: 3.0728, lng: 101.6069 },
-    addedBy: 'SET Student Council',
+    addedBy: 'FET Student Council',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -230,11 +230,11 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     walkingTimeMin: 3,
     halalStatus: 'Halal Certified',
     exactAddress: 'Kiosk B-02, Sunway University Boulevard, Jalan Universiti, Bandar Sunway',
-    locationNote: 'Boulevard walkway shaded concourse outside SET building',
+    locationNote: 'Boulevard walkway shaded concourse outside FET building',
     recommendedDish: 'Spanish Latte + Teriyaki Chicken Wrap / Mushroom Melt Panini',
     googleMapsPlaceQuery: 'ZUS Coffee Sunway University Boulevard',
     googleMapsCoordinates: { lat: 3.0676, lng: 101.6042 },
-    addedBy: 'SET CS Dept',
+    addedBy: 'FET CS Dept',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -251,7 +251,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Prawn & Char Siew Egg Fried Rice with Sunny Side-Up Telur Mata',
     googleMapsPlaceQuery: 'Uncle Soon Fried Rice SS15 Subang Jaya',
     googleMapsCoordinates: { lat: 3.0768, lng: 101.5902 },
-    addedBy: 'Engineering Alumni',
+    addedBy: 'FET Alumni',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   },
@@ -268,7 +268,7 @@ export const INITIAL_SET_RESTAURANTS: Restaurant[] = [
     recommendedDish: 'Spicy Chilli Padi Aglio Olio / Bacon Carbonara / Crispy Pork Chop',
     googleMapsPlaceQuery: 'Uncle Dons Bandar Sunway Jalan PJS 11/28a',
     googleMapsCoordinates: { lat: 3.0718, lng: 101.6078 },
-    addedBy: 'SET Robotics Lab',
+    addedBy: 'FET Robotics Lab',
     createdAt: '2026-01-10T10:00:00Z',
     active: true
   }

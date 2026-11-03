@@ -2,7 +2,7 @@
   <div class="sunway-top-strip">
     <div class="strip-content">
       <span class="uni-tag">SUNWAY UNIVERSITY</span>
-      <span class="faculty-tag">Faculty of Engineering &amp; Technology (SET)</span>
+      <span class="faculty-tag">Faculty of Engineering &amp; Technology (FET)</span>
     </div>
   </div>
 
@@ -23,7 +23,7 @@
       <!-- Admin status indicator & button -->
       <ion-button *ngIf="!isAdmin" fill="outline" color="light" size="small" (click)="openAdminLogin()">
         <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
-        Staff / Admin Mode
+        Admin Mode
       </ion-button>
 
       <ion-button *ngIf="isAdmin" fill="solid" color="warning" size="small" (click)="logoutAdmin()">
@@ -162,7 +162,7 @@
     <div class="directory-header">
       <div>
         <h2>Sunway Area Eateries &amp; Restaurants ({{ filteredRestaurants.length }})</h2>
-        <p>Curated spots around Sunway SET, Rock Cafe, Canopy Walk, Sunway Geo, Nadayu 28 &amp; Sunway Pyramid.</p>
+        <p>Curated spots around Sunway FET, Rock Cafe, Canopy Walk, Sunway Geo, Nadayu 28 &amp; Sunway Pyramid.</p>
       </div>
 
       <div class="header-tools">
@@ -333,7 +333,7 @@
         </ion-row>
 
         <ion-item class="form-item">
-          <ion-label position="stacked">Estimated Walking Time from SET Building (Minutes) *</ion-label>
+          <ion-label position="stacked">Estimated Walking Time from FET Building (Minutes) *</ion-label>
           <ion-input type="number" [(ngModel)]="newForm.walkingTimeMin" name="walkingTimeMin" min="1" max="60" required></ion-input>
         </ion-item>
 

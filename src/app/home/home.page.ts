@@ -49,7 +49,7 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     addedBy: ''
   };
 
-  // Distinct color palette for wheel segments (Sunway Navy, Gold, SET Teal, Maroon, etc.)
+  // Distinct color palette for wheel segments (Sunway Navy, Gold, FET Teal, Maroon, etc.)
   private segmentPalette = [
     '#002B49', '#0A9396', '#E09F3E', '#005F73',
     '#9B2226', '#2A9D8F', '#CA6702', '#1D3557',
@@ -393,17 +393,21 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
     this.presentToast('Downloaded restaurant-data.ts with all current restaurants!', 'success');
   }
 
-  // Open staff admin passcode prompt
+  // Open admin login prompt with username and password
   async openAdminLogin() {
     const alert = await this.alertCtrl.create({
-      header: 'Staff / Admin Authentication',
-      subHeader: 'Only authorized staff can delete restaurant entries.',
-      message: 'Enter staff passcode (Default passcode: setadmin123)',
+      header: 'Admin Mode Login',
+      subHeader: 'Enter Admin credentials to manage eateries.',
       inputs: [
         {
-          name: 'passcode',
+          name: 'username',
+          type: 'text',
+          placeholder: 'Username'
+        },
+        {
+          name: 'password',
           type: 'password',
-          placeholder: 'Enter Passcode'
+          placeholder: 'Password'
         }
       ],
       buttons: [
@@ -412,13 +416,15 @@ export class HomePage implements OnInit, AfterViewInit, OnDestroy {
           role: 'cancel'
         },
         {
-          text: 'Authenticate',
+          text: 'Login',
           handler: (data) => {
-            if (this.restaurantService.verifyAdmin(data.passcode || '')) {
-              this.presentToast('Staff privileges enabled! You can now delete records.', 'success');
+            const user = data.username || '';
+            const pass = data.password || '';
+            if (this.restaurantService.verifyAdmin(user, pass)) {
+              this.presentToast('Admin Mode enabled! You can now delete records.', 'success');
               return true;
             } else {
-              this.presentToast('Invalid passcode. Access denied.', 'danger');
+              this.presentToast('Invalid username or password. Access denied.', 'danger');
               return false;
             }
           }
